@@ -37,13 +37,16 @@ module.exports = {
     },
     hardhat: {
       forking: {
-        url: "https://evm-cronos.crypto.org:8545",
+        /** 
+         * It is strongly adviced to use self hosted RPC to use for forking 
+         * **/
+        url: "https://evm-cronos.crypto.org:8545", 
       }
     },
     cronos:{
       url:"https://evm-cronos.crypto.org:8545",
       chainId: 25,
-      accounts: getHDWallet()
+      //accounts: getHDWallet()
     }
   }
 };
