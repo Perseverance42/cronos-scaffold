@@ -11,6 +11,6 @@ npx hardhat accounts
 npx hardhat compile
 npx hardhat clean
 npx hardhat node
-npx hardhat run --netwrok devnode scripts/sample-script.js
+npx hardhat run --network devnode scripts/sample-script.js
 npx hardhat help
 ```
