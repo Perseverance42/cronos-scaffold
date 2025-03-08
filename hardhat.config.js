@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("@nomiclabs/hardhat-waffle");
+require("@nomicfoundation/hardhat-toolbox");
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -10,6 +10,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
     console.log(account.address);
   }
 });
+
 const getHDWallet = () => {
   const { MNEMONIC, PRIVATE_KEY } = process.env;
   if (MNEMONIC && MNEMONIC !== "") {
@@ -30,7 +31,15 @@ const getHDWallet = () => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.4",
+  solidity: {
+    version: "0.8.24",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
+  },
   networks:{
     devnode: {
       url:"http://127.0.0.1:8545",
