@@ -4,7 +4,6 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
 const hre = require("hardhat");
 
 async function main() {
@@ -15,29 +14,31 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  //get signers to work with.
-  const [mainWallet, secondWallet] = await ethers.getSigners();
+  // Get signers to work with
+  const [mainWallet, secondWallet] = await hre.ethers.getSigners();
 
-  //use ethers.utils to convert units
-  let toSpend = ethers.utils.parseEther("100.0"); // 100ETH/CRO
+  // Use ethers to convert units (parseEther is now a standalone function)
+  const toSpend = hre.ethers.parseEther("100.0"); // 100 ETH/CRO
 
-  //simple send
-  let tx = await mainWallet.sendTransaction({
+  // Simple send
+  console.log("Sending", hre.ethers.formatEther(toSpend), "ETH/CRO from", mainWallet.address, "to", secondWallet.address);
+  
+  const tx = await mainWallet.sendTransaction({
     to: secondWallet.address,
     value: toSpend
   });
-  //wait for block to be mined. Get tx receipt back
-  let receipt = await tx.wait();
-  console.log("Simple send returned:", receipt);
 
-
-  //send and test if recipient got funds
-  tx = mainWallet.sendTransaction({
-    to: secondWallet.address,
-    value: toSpend
-  });
-  expect(() => tx).to.changeEtherBalance(secondWallet.address, toSpend);
-  console.log("Recipient received expected value");
+  // Wait for block to be mined. Get tx receipt back
+  const receipt = await tx.wait();
+  console.log("Transaction hash:", receipt.hash);
+  console.log("Block number:", receipt.blockNumber);
+  
+  // Get balances after transaction
+  const senderBalance = await hre.ethers.provider.getBalance(mainWallet.address);
+  const receiverBalance = await hre.ethers.provider.getBalance(secondWallet.address);
+  
+  console.log("Sender balance:", hre.ethers.formatEther(senderBalance), "ETH/CRO");
+  console.log("Receiver balance:", hre.ethers.formatEther(receiverBalance), "ETH/CRO");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
